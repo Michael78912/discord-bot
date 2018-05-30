@@ -27,7 +27,7 @@ async def time_in_kelowna(ctx):
 
 @bot.command()
 async def see_kelowna(ctx):
-    server = client.get_server()
+    # server = client.get_server()
     soup = BeautifulSoup(urlopen('https://www.castanet.net/scenic-web-cams/camera/7/', ))
     division = soup.find('img', {'id': 'camImage', 'alt': 'Downtown Kelowna'})
     img = division.get_attribute_list('src')[0]
