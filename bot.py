@@ -61,7 +61,6 @@ the long run.
 
 commands:
 
-    spam: constantly spam the word spamming. USE WITH CAUTION
     snowman: display a snowman
     mention: mention the sender
     time_in_kelowna: send the current time in Kelowna, BC, Canada.
