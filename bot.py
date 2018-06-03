@@ -5,13 +5,17 @@ import os
 import shutil
 import string
 import random
+import json
 os.chdir(os.path.dirname(__file__))
 
+
+from pytemperature import k2f, k2c
 import discord
 from discord.ext import commands
 from bs4 import BeautifulSoup
 from urllib.request import urlopen
 import wikipedia
+import pyowm
 
 from stdabsorb import StdAbsorber
 
@@ -93,21 +97,49 @@ class Joker:
 
 
 
+@bot.command()
+async def utf8_char(ctx, code):
+    """
+    outputs the unicode of code
+    also accepts a range, ex: >utf8_char 0-10 will output chars 0 - 10.
+    """
+    try:
+        if '-' in code:
+            codes = code.split('-')
+            new = []
+            for i in codes:
+                new.append(i.strip())
+                print(new)
+            codes = [int(i) for i in new]
+            iterable = range(*codes)
 
+        else:
+            iterable = [int(code)]
+
+    except:
+        await ctx.send('invalid number/range')
+        raise
+        return
+
+    contents = ''
+    for i, x in zip(iterable, range(len(iterable))):
+        contents += '%d: %s, ' % (x, chr(i))
+    await ctx.send(contents)
 
 
 @bot.command()
-async def python_exec(ctx, *args: str):
+async def python_exec(ctx, *, code):
     """
     executes python code, and outputs as a message.
+    feel free to use code blocks for multiple lines.
+    ONLY USE SINGLE QUOTES: if you MUST use a double quote, escape it with a backslash.
+    spaces are accepted.
     """
-    print(args)
+    print(code)
 
-    code = ' '.join(args)
-    if code.startswith('`'):
-        code = code.strip('`')
-        code = args.join('\n')
-        print(code)
+    code = code.strip('`')
+    if code.startswith('python\n'):
+        code = '\n'.join(code.split('\n')[1:])
     for cmd in BAD_COMMANDS:
         if cmd in code:
             await ctx.send(ctx.author.mention + ' I can\'t let you execute %a, for the health of my own\
@@ -126,14 +158,41 @@ computer. this is because you could do something on MY computer that I don\'t wa
         return_str = get_details(e)
         print(return_str)
 
-    return_str = '```python\n' + return_str + '```' if return_str != '' else 'No output'
+    return_str = '```' + return_str + '```' if return_str != '' else 'No output'
 
 
     await ctx.send(return_str)
 
-@python_exec.error
-async def pyexc_error(ctx, error):
-    pass
+@bot.command()
+async def get_weather(ctx, city, country):
+    """
+    sends the weather for city, country.
+    also sends an icon of the weather.
+    """
+    city = city.lower().strip().title()
+    country = country.lower().strip().title()
+    owm = pyowm.OWM('5949da28441858d0fcb6070f3cbf6836')
+    try:
+        weather_json = json.loads(owm.weather_at_place('{},{}'.format(city, country)).to_JSON())['Weather']
+    except:
+        await ctx.send('{}, {}'.format(city, country).title() + ' not found!')
+        return
+    url = 'http://openweathermap.org/img/w/'
+    icon_file = url + weather_json['weather_icon_name'] + '.png'
+    icon = urlopen(icon_file)
+    with open('icon.png', 'wb') as f:
+        shutil.copyfileobj(icon, f)
+
+    temp = weather_json['temperature']['temp']
+    output = 'Weather for {}, {}:\n'.format(city, country)
+    output += 'status: ' + weather_json['detailed_status'] + '\n'
+    output += 'cloud %: ' + repr(weather_json['clouds']) + '\n'
+    output += ('temperature: Farenheit: %s, Celsius: %s' % (round(k2f(int(temp)), 1), round(k2c(int(temp)), 1))) + '\n'
+
+    await ctx.send(output, file=discord.File('icon.png'))
+    
+    
+
 
 @bot.command()
 async def joke(ctx):
@@ -142,11 +201,10 @@ async def joke(ctx):
     """
     await ctx.send(Joker().joke)
 
+
 @bot.command()
-async def test(ctx):
-    channel = ctx.channel
-    with open('test.png', 'rb') as f:
-        await channel.send(file=discord.File('test.png'))
+async def test(ctx, *, arg):
+    print(arg.encode())
 
 def get_details(exception):
     """
@@ -160,4 +218,4 @@ def get_details(exception):
         
     
 
-bot.run('NDUwNDA1Nzk4MjYzMzkwMjE5.DeyxOQ.scbD-cTS4CvePBE4dWh6DGIFEJ8')
+bot.run(process.env.TOKEN)
