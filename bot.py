@@ -6,10 +6,14 @@ import shutil
 import string
 import random
 import json
+import socket
 import sys
 
-if sys.platform.lower() == 'win32':
+if socket.gethostname() == 'Michael':
     os.chdir(os.path.dirname(__file__))
+    class process:
+        class env:
+            TOKEN = open(os.path.join(os.getcwd(), '../p')).read()
 
 
 from pytemperature import k2f, k2c
