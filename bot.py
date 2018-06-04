@@ -225,4 +225,4 @@ def get_details(exception):
         
     
 
-bot.run(process.env.TOKEN)
+bot.run(os.environ['TOKEN'])
