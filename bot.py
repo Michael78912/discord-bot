@@ -6,7 +6,10 @@ import shutil
 import string
 import random
 import json
-os.chdir(os.path.dirname(__file__))
+import sys
+
+if sys.platform.lower() == 'win32':
+    os.chdir(os.path.dirname(__file__))
 
 
 from pytemperature import k2f, k2c
