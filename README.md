@@ -11,3 +11,5 @@ it has several _random_ commands, and i will show a few:
 >get_weather <city> <country>: outputs weather information for given city in country.
 ```
 
+if you want to get it,  [authenticate it for a server](https://discordapp.com/oauth2/authorize?client_id=450405798263390219&scope=bot)
+
