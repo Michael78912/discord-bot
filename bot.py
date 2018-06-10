@@ -220,8 +220,7 @@ def get_details(exception):
 
     tbstring = ''.join(traceback.format_exception(
         type(exception), exception, exception.__traceback__))
-    #tbargs = ', '.join(exception.args)
-    return tbstring#, tbargs
+    return tbstring
         
     
 
