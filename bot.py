@@ -9,11 +9,6 @@ import json
 import socket
 import sys
 
-if socket.gethostname() == 'Michael':
-    os.chdir(os.path.dirname(__file__))
-    class process:
-        class env:
-            TOKEN = open(os.path.join(os.getcwd(), '../p')).read()
 
 
 from pytemperature import k2f, k2c
@@ -113,6 +108,7 @@ async def utf8_char(ctx, code):
     try:
         if '-' in code:
             codes = code.split('-')
+            first_code = int(codes[0])
             new = []
             for i in codes:
                 new.append(i.strip())
@@ -122,6 +118,7 @@ async def utf8_char(ctx, code):
 
         else:
             iterable = [int(code)]
+            first_code = int(code)
 
     except:
         await ctx.send('invalid number/range')
@@ -130,8 +127,17 @@ async def utf8_char(ctx, code):
 
     contents = ''
     for i, x in zip(iterable, range(len(iterable))):
-        contents += '%d: %s, ' % (x, chr(i))
-    await ctx.send(contents)
+        contents += '%d: %s, ' % (x + first_code, chr(i))
+
+    contents = contents.rstrip(',')
+
+    if len(contents) > 2000:
+        await ctx.send('the range is longer than 2000 characters in range, unable to send. I would say sorry, but this is probably your fault :smile:')
+        return 
+    try:
+        await ctx.send(contents)
+    except:
+        await ctx.send('invalid range. what the heck were you trying to do?')
 
 
 @bot.command()
