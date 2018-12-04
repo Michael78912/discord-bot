@@ -9,7 +9,7 @@ import json
 import socket
 import sys
 
-
+sys.path.append('Lib/site-packages')
 
 from pytemperature import k2f, k2c
 import discord
@@ -18,6 +18,9 @@ from bs4 import BeautifulSoup
 from urllib.request import urlopen
 import wikipedia
 import pyowm
+
+
+
 
 from stdabsorb import StdAbsorber
 
