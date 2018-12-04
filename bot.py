@@ -38,6 +38,7 @@ async def snowman(ctx):
     await ctx.send("lol you expected, a snowman, but i can't do that, so have an 8.")
 
 
+
 @bot.command()
 async def mention(ctx, do_it='yes'):
     """
