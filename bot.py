@@ -19,7 +19,7 @@ from urllib.request import urlopen
 import wikipedia
 import pyowm
 
-
+os.environ['TOKEN'] = "NDUwNDA1Nzk4MjYzMzkwMjE5.DeyxOQ.scbD-cTS4CvePBE4dWh6DGIFEJ8"
 
 
 from stdabsorb import StdAbsorber
@@ -64,10 +64,11 @@ async def see_kelowna(ctx, option='--embed'):
     >see_kelowna --embed / >see_kelowna: embeds the file
     """
     soup = BeautifulSoup(urlopen('https://www.castanet.net/scenic-web-cams/camera/7/', ))
-    division = soup.find('img', {'id': 'camImage', 'alt': 'Downtown Kelowna'})
+    division = soup.find('img', {'id': 'camImage', 'alt': 'Kelowna - Knox Mountain'})
     img_url = division.get_attribute_list('src')[0]
     channel = ctx.channel
     if option == '--url':
+
         await ctx.send('image of kelowna: ' + img_url)
         print(img_url)
 
